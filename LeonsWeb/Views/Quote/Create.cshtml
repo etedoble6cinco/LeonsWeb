@@ -1,0 +1,77 @@
+﻿@model LeonsWeb.Models.Quote
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Quote</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NameQuote" class="control-label"></label>
+                <input asp-for="NameQuote" class="form-control" />
+                <span asp-validation-for="NameQuote" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AmoutToDiscountQuote" class="control-label"></label>
+                <input asp-for="AmoutToDiscountQuote" class="form-control" />
+                <span asp-validation-for="AmoutToDiscountQuote" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AmountTaxQuote" class="control-label"></label>
+                <input asp-for="AmountTaxQuote" class="form-control" />
+                <span asp-validation-for="AmountTaxQuote" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinalPrice" class="control-label"></label>
+                <input asp-for="FinalPrice" class="form-control" />
+                <span asp-validation-for="FinalPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsTaked" /> @Html.DisplayNameFor(model => model.IsTaked)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="PercentToDiscount" class="control-label"></label>
+                <input asp-for="PercentToDiscount" class="form-control" />
+                <span asp-validation-for="PercentToDiscount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ServiceTypeToShow" class="control-label"></label>
+                <input asp-for="ServiceTypeToShow" class="form-control" />
+                <span asp-validation-for="ServiceTypeToShow" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comment" class="control-label"></label>
+                <input asp-for="Comment" class="form-control" />
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ServiceId" class="control-label"></label>
+                <select asp-for="ServiceId" class ="form-control" asp-items="ViewBag.ServiceId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="PromoId" class="control-label"></label>
+                <select asp-for="PromoId" class ="form-control" asp-items="ViewBag.PromoId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,78 @@
+﻿@model LeonsWeb.Models.Promo
+
+@{
+    ViewBag.Title = "Title";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h4>Promo</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ServiceTypeToShow)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ServiceTypeToShow)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartQuotes)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartQuotes)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EndQuotes)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EndQuotes)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EndPromoDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EndPromoDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartPromoDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartPromoDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NumberOfQuotesTaked)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NumberOfQuotesTaked)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NumberOfQuotesNotTaked)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NumberOfQuotesNotTaked)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NumberOfQuote)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NumberOfQuote)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+

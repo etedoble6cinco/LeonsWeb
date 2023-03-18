@@ -1,0 +1,83 @@
+﻿@model LeonsWeb.Models.Quote
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Quote</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NameQuote)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NameQuote)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AmoutToDiscountQuote)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AmoutToDiscountQuote)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AmountTaxQuote)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AmountTaxQuote)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FinalPrice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FinalPrice)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsTaked)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IsTaked)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PercentToDiscount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PercentToDiscount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ServiceTypeToShow)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ServiceTypeToShow)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Service)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Service.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Promo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Promo.Id)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+
+
+}
