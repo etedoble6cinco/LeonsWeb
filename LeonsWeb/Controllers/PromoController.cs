@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LeonsWeb.Data;
 using LeonsWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LeonsWeb.Controllers
 {
+    [Authorize]
+    [Route("[controller]/[action]")]
     public class PromoController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -60,7 +63,10 @@ namespace LeonsWeb.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name,Description,ServiceTypeToShow,StartQuotes,EndQuotes,EndPromoDate,StartPromoDate,NumberOfQuotesTaked,NumberOfQuotesNotTaked,NumberOfQuote")] Promo promo)
         {
             Quote quote = new Quote();
-            if(promo.NumberOfQuote)
+            if(promo.NumberOfQuote > 1)
+            {
+
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(promo);

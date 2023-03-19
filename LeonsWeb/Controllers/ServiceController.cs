@@ -7,11 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LeonsWeb.Data;
 using LeonsWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LeonsWeb.Controllers
 {
+    [Authorize]
+    [Route("[controller]/[action]")]
     public class ServiceController : Controller
+
     {
+
         private readonly ApplicationDbContext _context;
 
         public ServiceController(ApplicationDbContext context)
@@ -58,6 +63,8 @@ namespace LeonsWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ServiceName,ServiceDescription,ServicePrice")] Service service)
         {
+   
+            
             if (ModelState.IsValid)
             {
                 _context.Add(service);

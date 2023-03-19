@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Title";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 
 
@@ -30,38 +30,42 @@
                 <span asp-validation-for="ServiceTypeToShow" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StartQuotes" class="control-label"></label>
-                <input asp-for="StartQuotes" class="form-control" />
-                <span asp-validation-for="StartQuotes" class="text-danger"></span>
+
+
             </div>
+              
+                <input asp-for="StartQuotes" type="hidden" name="FirstRangePickerStartDate" class="form-control" />
+        
+
+      
+              
+                <input asp-for="EndQuotes" type="hidden" name="FirstRangePickerEndDate" class="form-control" />
+        
             <div class="form-group">
-                <label asp-for="EndQuotes" class="control-label"></label>
-                <input asp-for="EndQuotes" class="form-control" />
-                <span asp-validation-for="EndQuotes" class="text-danger"></span>
-            </div>
+                <input id="FirstDateRangePicker" />
+             </div>
             <div class="form-group">
-                <label asp-for="EndPromoDate" class="control-label"></label>
-                <input asp-for="EndPromoDate" class="form-control" />
-                <span asp-validation-for="EndPromoDate" class="text-danger"></span>
+                <input id="SecondDateRangePicker" />
             </div>
-            <div class="form-group">
-                <label asp-for="StartPromoDate" class="control-label"></label>
-                <input asp-for="StartPromoDate" class="form-control" />
-                <span asp-validation-for="StartPromoDate" class="text-danger"></span>
-            </div>
+                <input asp-for="EndPromoDate" type="hidden" name="SecondRangePickerEndDate" class="form-control" />
+         
+        
+             
+                <input asp-for="StartPromoDate" type="hidden" name="SecondRangePickerStartDate" class="form-control" />
+         
             <div class="form-group">
                 <label asp-for="NumberOfQuotesTaked" class="control-label"></label>
-                <input asp-for="NumberOfQuotesTaked" class="form-control" />
+                <input asp-for="NumberOfQuotesTaked" type="number" class="form-control" />
                 <span asp-validation-for="NumberOfQuotesTaked" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NumberOfQuotesNotTaked" class="control-label"></label>
-                <input asp-for="NumberOfQuotesNotTaked" class="form-control" />
+                <input asp-for="NumberOfQuotesNotTaked" type="number" class="form-control" />
                 <span asp-validation-for="NumberOfQuotesNotTaked" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NumberOfQuote" class="control-label"></label>
-                <input asp-for="NumberOfQuote" class="form-control" />
+                <input asp-for="NumberOfQuote" type="number" class="form-control" />
                 <span asp-validation-for="NumberOfQuote" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -77,5 +81,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
 }
 

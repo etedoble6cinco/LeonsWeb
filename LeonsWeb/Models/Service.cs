@@ -11,6 +11,6 @@ namespace LeonsWeb.Models
         public string ServiceName { get; set; }
         public string ServiceDescription { get; set; }
         public decimal ServicePrice { get; set; }
-        public virtual ICollection<Quote> Quotes { get; }
+      
     }
 }

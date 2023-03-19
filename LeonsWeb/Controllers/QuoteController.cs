@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LeonsWeb.Data;
 using LeonsWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LeonsWeb.Controllers
 {
+    [Authorize]
+    [Route("[controller]/[action]")]
     public class QuoteController : Controller
     {
         private readonly ApplicationDbContext _context;
