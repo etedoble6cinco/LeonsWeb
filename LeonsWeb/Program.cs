@@ -1,4 +1,5 @@
-﻿using LeonsWeb.Data;
+﻿using AutoMapper;
+using LeonsWeb.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,14 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(60);
 });
 
+//Mapper
+var mapperConfig =new MapperConfiguration(m =>
+{
 
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+builder.Services.AddMvc();
 
 builder.Services.AddCors(options =>
 {
