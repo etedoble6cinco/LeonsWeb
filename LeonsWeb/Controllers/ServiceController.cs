@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+
 using Microsoft.EntityFrameworkCore;
 using LeonsWeb.Data;
 using LeonsWeb.Models;
 using Microsoft.AspNetCore.Authorization;
+using LeonsWeb.Services;
+using LeonsWeb.Models.ViewModel;
 
 namespace LeonsWeb.Controllers
 {
@@ -17,59 +19,57 @@ namespace LeonsWeb.Controllers
 
     {
 
-        private readonly ApplicationDbContext _context;
+        private readonly IServiceService _serviceService;
+       
 
-        public ServiceController(ApplicationDbContext context)
+        public ServiceController(  IServiceService service)
         {
-            _context = context;
+           
+            _serviceService = service;
         }
-
         // GET: Service
         public async Task<IActionResult> Index()
         {
-              return _context.Services != null ? 
-                          View(await _context.Services.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Services'  is null.");
-        }
 
+              
+              List<ServiceViewModel> services = new List<ServiceViewModel>();
+             services = await _serviceService.GetAllServices();
+
+             return View(services);
+              
+        }
         // GET: Service/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Services == null)
+            
+
+            if((await _serviceService.GetService(id)) == null)
             {
                 return NotFound();
             }
 
-            var service = await _context.Services
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (service == null)
-            {
-                return NotFound();
-            }
-
-            return View(service);
+            return View(await _serviceService.GetService(id));
         }
-
         // GET: Service/Create
         public IActionResult Create()
         {
             return View();
         }
-
         // POST: Service/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ServiceName,ServiceDescription,ServicePrice")] Service service)
+        public async Task<IActionResult> Create([Bind("Id,ServiceName,ServiceDescription,ServicePrice")] ServiceViewModel service)
         {
    
             
             if (ModelState.IsValid)
             {
-                _context.Add(service);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                  if(await _serviceService.CreateService(service)){
+                         return RedirectToAction(nameof(Index));
+                  }
+               return Problem("not created");
             }
             return View(service);
         }
@@ -77,12 +77,8 @@ namespace LeonsWeb.Controllers
         // GET: Service/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Services == null)
-            {
-                return NotFound();
-            }
 
-            var service = await _context.Services.FindAsync(id);
+            var service = await _serviceService.GetService(id);
             if (service == null)
             {
                 return NotFound();
@@ -95,7 +91,7 @@ namespace LeonsWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ServiceName,ServiceDescription,ServicePrice")] Service service)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ServiceName,ServiceDescription,ServicePrice")] ServiceViewModel service)
         {
             if (id != service.Id)
             {
@@ -104,23 +100,11 @@ namespace LeonsWeb.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(service);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ServiceExists(service.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                if(await _serviceService.EditService(service))
                 return RedirectToAction(nameof(Index));
+                else{
+                    return NotFound();
+                }
             }
             return View(service);
         }
@@ -128,19 +112,14 @@ namespace LeonsWeb.Controllers
         // GET: Service/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Services == null)
+
+            
+            if ( await _serviceService.GetService(id) == null)
             {
                 return NotFound();
             }
 
-            var service = await _context.Services
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (service == null)
-            {
-                return NotFound();
-            }
-
-            return View(service);
+            return View(await _serviceService.GetService(id));
         }
 
         // POST: Service/Delete/5
@@ -148,23 +127,15 @@ namespace LeonsWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Services == null)
+            if ((await _serviceService.DeleteService(id)))
             {
-                return Problem("Entity set 'ApplicationDbContext.Services'  is null.");
+                return RedirectToAction(nameof(Index));
+                
             }
-            var service = await _context.Services.FindAsync(id);
-            if (service != null)
-            {
-                _context.Services.Remove(service);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+        
+         return Problem("Entity set 'ApplicationDbContext.Services'  is null.");   
         }
 
-        private bool ServiceExists(int id)
-        {
-          return (_context.Services?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+       
     }
 }

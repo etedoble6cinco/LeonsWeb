@@ -1,4 +1,5 @@
-﻿using LeonsWeb.Data;
+﻿using AutoMapper;
+using LeonsWeb.Data;
 using LeonsWeb.Models;
 using LeonsWeb.Models.QuoteViewModel;
 using LeonsWeb.Models.ViewModel;
@@ -11,17 +12,18 @@ namespace LeonsWeb.Quotes
     public class QuoteService : IQuoteService
     {
         private readonly ApplicationDbContext _context;
-
-        public QuoteService(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public QuoteService(ApplicationDbContext context, IMapper mapper)
         {
+            _mapper = mapper;
             _context = context;
         }
         public async Task<bool> CrateQuote(QuoteViewModel quoteViewModel)
         {
             try
             {
-                Quote quote = new Quote();
-           
+                var quote = _mapper.Map<QuoteViewModel , Quote>(quoteViewModel);
+                
                
                 _context.Add(quote);
 
@@ -41,7 +43,7 @@ namespace LeonsWeb.Quotes
         {
             try
             {
-
+                
                 var Quote = await _context.Queues.FindAsync(id);
                 _context.Remove(Quote);
                 await _context.SaveChangesAsync();

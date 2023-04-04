@@ -4,7 +4,7 @@ namespace LeonsWeb.Services
 {
     public interface IServiceService
     {
-        Task<bool> CrateService(ServiceViewModel serviceViewModel);
+        Task<bool> CreateService(ServiceViewModel serviceViewModel);
         Task<ServiceViewModel> GetService(int? id);
         Task<List<ServiceViewModel>> GetAllServices(); 
         

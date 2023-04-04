@@ -1,6 +1,8 @@
-﻿using LeonsWeb.Data;
+﻿using AutoMapper;
+using LeonsWeb.Data;
 using LeonsWeb.Models;
 using LeonsWeb.Models.ViewModel;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -9,27 +11,25 @@ namespace LeonsWeb.Services
     public class ServiceService : IServiceService
     {
         private readonly ApplicationDbContext _context;
-
-        public ServiceService(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public ServiceService(ApplicationDbContext context ,IMapper mapper)
         { 
           _context = context;   
+          _mapper = mapper;
         } 
-        public async Task<bool> CrateService(ServiceViewModel serviceViewModel)
+        public async Task<bool> CreateService(ServiceViewModel serviceViewModel)
         {
             try
             {
-                Service service = new Service();
-                service.Id = serviceViewModel.Id;
-                service.ServiceName = serviceViewModel.ServiceName;
-                service.ServicePrice = serviceViewModel.ServicePrice;
-                service.ServiceDescription = serviceViewModel.ServiceDescription;
+            
+                var service = _mapper.Map<ServiceViewModel, Service>(serviceViewModel);
                 _context.Add(service);
  
                 await _context.SaveChangesAsync();
                 return true;
-            } catch (Exception ex) {
+            } catch (SqlException ex) {
                 Console.WriteLine(ex.ToString());   
-                throw;
+                return false;
              }  
 
             
@@ -38,17 +38,17 @@ namespace LeonsWeb.Services
         public async Task<bool> DeleteService(int? id)
         {
             try
-            {
-
+            {    
+                if(id is not null && ServiceExists(id)){}
                 var service = await _context.Services.FindAsync(id);
                 _context.Remove(service);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception e)
+            catch (SqlException e)
             {
                 Console.WriteLine(e.ToString());
-                throw;
+                return false;
             }
 
         }
@@ -62,38 +62,31 @@ namespace LeonsWeb.Services
                 service.ServiceName = serviceViewModel.ServiceName;
                 service.ServiceDescription= serviceViewModel.ServiceDescription;
                 service.ServicePrice = serviceViewModel.ServicePrice;
+                
                 _context.Update(service);
                 await _context.SaveChangesAsync();
                 return true;
-            }catch(Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                throw;
-            }
+            }catch (DbUpdateConcurrencyException ex)
+               {
+                   Console.WriteLine(ex.Message.ToString());
+                   return false;
+               }
         }
 
         public async Task<List<ServiceViewModel>> GetAllServices()
         {
            try {
 
-                List<ServiceViewModel> serviceViewModels = new List<ServiceViewModel>();
-                var services = (from _service in
-                                    _context.Services
-                                join _quotes in _context.Queues on _service.Id equals _quotes.ServiceId
-                                select new ServiceViewModel
-                                {
-                                    Id = _service.Id,
-                                    ServiceDescription = _service.ServiceDescription,
-                                    ServiceName = _service.ServiceName,
-                                    ServicePrice = _service.ServicePrice
-                                }).OrderBy(x => x.Id);
+                 var services =  await _context.Services.ToListAsync();
+                 var servicesVM = _mapper.Map<List<Service>, List<ServiceViewModel>>(services);
 
-                return await services.ToListAsync();
+                 return servicesVM;
+               
             } catch (Exception e)
             {
 
-                Console.WriteLine(e.ToString());
-                throw;
+                List<ServiceViewModel> servicesVM = new List<ServiceViewModel>();
+                return servicesVM;
             }
             
 
@@ -103,28 +96,26 @@ namespace LeonsWeb.Services
         {
             try
             {
-                  if(await _context.Services.FirstOrDefaultAsync(x => x.Id == id) is not null)
-                {
-                    var service = await _context.Services.FirstOrDefaultAsync(x => x.Id == id);
-
-                    ServiceViewModel serviceViewModel = new ServiceViewModel();
-                    serviceViewModel.Id = service.Id;
-                    serviceViewModel.ServicePrice = service.ServicePrice;
-                    serviceViewModel.ServiceDescription = service.ServiceDescription;
-                    serviceViewModel.ServiceName = service.ServiceName;
-                    return serviceViewModel;
-
+                if(ServiceExists(id)){
+                   var service = await _context.Services.FindAsync(id);   
+                   var servicesVM = _mapper.Map<Service,ServiceViewModel>(service);
+                   return servicesVM;
                 }
-                else
-                {
-                    return new ServiceViewModel();
-                }            
-              
-                
-            }catch (Exception e)
+                return null;
+            }catch (SqlException e)
             {
+                Console.WriteLine(e.Message.ToString());
                 throw;
             }
+        }
+         private bool ServiceExists(int? id)
+        {
+            if(id is not null){
+                    return (_context.Services?.Any(e => e.Id == id)).GetValueOrDefault();
+            }else{
+                return false;
+            }
+          
         }
 
 

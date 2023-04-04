@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using LeonsWeb;
 using LeonsWeb.Data;
+using LeonsWeb.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +26,11 @@ builder.Services.AddSession(options =>
 //Mapper
 var mapperConfig =new MapperConfiguration(m =>
 {
-
+      m.AddProfile( new MappingProfile());
 });
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
+builder.Services.AddTransient<IServiceService, ServiceService>();
 builder.Services.AddMvc();
 
 builder.Services.AddCors(options =>

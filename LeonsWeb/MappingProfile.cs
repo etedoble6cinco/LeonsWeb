@@ -12,6 +12,9 @@ namespace LeonsWeb
             CreateMap<PromoViewModel, Promo>();
             CreateMap<QuoteViewModel, Quote>();
             CreateMap<ServiceViewModel, Service>();
+            CreateMap<Service,ServiceViewModel>();
+            CreateMap<Promo,PromoViewModel>();
+            CreateMap<Quote,QuoteViewModel>();
 
         
         }
