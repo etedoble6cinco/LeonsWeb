@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using LeonsWeb.Data;
-using LeonsWeb.Models;
+using LeonsWeb.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using LeonsWeb.Services;
-using LeonsWeb.Models.QuoteViewModel;
 
 namespace LeonsWeb.Controllers
 {
@@ -48,8 +41,8 @@ namespace LeonsWeb.Controllers
         // GET: Quote/Create
         public IActionResult Create()
         {
-           ViewData =["PromoId"] = _promoservice.GetSelectList(0);
-           ViewData =["ServiceId"] = _serviceservice.GetSelectList(0);
+           ViewData["PromoId"] = _promoservice.GetSelectList(0);
+           ViewData["ServiceId"] = _serviceservice.GetSelectList(0);
             return View();
         }
 
@@ -79,8 +72,8 @@ namespace LeonsWeb.Controllers
             {
                 return NotFound();
             }
-            ViewData["PromoId"] = 
-            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Id", quote.ServiceId);
+            ViewData["PromoId"] =   _promoservice.GetSelectList(quote.PromoId);
+            ViewData["ServiceId"] =  _serviceservice.GetSelectList(quote.ServiceId);
             return View(quote);
         }
 
@@ -89,56 +82,39 @@ namespace LeonsWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NameQuote,AmoutToDiscountQuote,AmountTaxQuote,FinalPrice,IsTaked,PercentToDiscount,ServiceTypeToShow,Comment,ServiceId,PromoId")] Quote quote)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NameQuote,AmoutToDiscountQuote,AmountTaxQuote,FinalPrice,IsTaked,PercentToDiscount,ServiceTypeToShow,Comment,ServiceId,PromoId")] QuoteViewModel quoteViewModel)
         {
-            if (id != quote.Id)
+             if (id != quoteViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(quote);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!QuoteExists(quote.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                if(await _quoteservice.EditQuote(quoteViewModel))
                 return RedirectToAction(nameof(Index));
+                else{
+                    return NotFound();
+                }
             }
-            ViewData["PromoId"] = new SelectList(_context.Promos, "Id", "Id", quote.PromoId);
-            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Id", quote.ServiceId);
-            return View(quote);
+        return View(quoteViewModel);
+        
         }
+         
+        
+        
 
         // GET: Quote/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Queues == null)
+            
+                if ( await _quoteservice.GetQuote(id) == null)
             {
                 return NotFound();
             }
 
-            var quote = await _context.Queues
-                .Include(q => q.Promo)
-                .Include(q => q.Service)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (quote == null)
-            {
-                return NotFound();
-            }
-
-            return View(quote);
+            return View(await _quoteservice.GetQuote(id));
+      
         }
 
         // POST: Quote/Delete/5
@@ -146,23 +122,15 @@ namespace LeonsWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Queues == null)
+             if ((await _quoteservice.DeleteQuote(id)))
             {
-                return Problem("Entity set 'ApplicationDbContext.Queues'  is null.");
+                return RedirectToAction(nameof(Index));
+                
             }
-            var quote = await _context.Queues.FindAsync(id);
-            if (quote != null)
-            {
-                _context.Queues.Remove(quote);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+        
+         return Problem("Entity set 'ApplicationDbContext.Services'  is null.");   
+       
         }
 
-        private bool QuoteExists(int id)
-        {
-          return (_context.Queues?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }

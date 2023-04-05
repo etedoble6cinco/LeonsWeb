@@ -136,8 +136,13 @@ namespace LeonsWeb.Services
         public SelectList GetSelectList(int id){
 
 
+            if(id >0){
             SelectList selectList = new SelectList(_context.Promos, "Id", "Name", id);
             return selectList;
+            }else{
+            SelectList selectList = new SelectList(_context.Promos, "Id", "Name");
+            return selectList;       
+            }
         }
 
      

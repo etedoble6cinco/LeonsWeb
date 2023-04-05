@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LeonsWeb.Models.Quote>
+﻿@model List<LeonsWeb.Models.ViewModel.QuoteViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,36 +14,36 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.NameQuote)
+                NameQuote
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AmoutToDiscountQuote)
+                AmoutToDiscountQuote
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AmountTaxQuote)
+                AmountTaxQuote
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FinalPrice)
+                FinalPrice
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsTaked)
+                IsTaked
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PercentToDiscount)
+                PercentToDiscount
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ServiceTypeToShow)
+                ServiceTypeToShow
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Comment)
+               Comment
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Service)
+                 Service
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Promo)
+                 Promo
             </th>
-            <th></th>
+            <th></th> 
         </tr>
     </thead>
     <tbody>
@@ -74,10 +74,10 @@
                 @Html.DisplayFor(modelItem => item.Comment)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Service.Id)
+                @Html.DisplayFor(modelItem => item.ServiceId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Promo.Id)
+                @Html.DisplayFor(modelItem => item.PromoId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

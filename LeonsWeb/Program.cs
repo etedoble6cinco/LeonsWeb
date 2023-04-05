@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LeonsWeb;
 using LeonsWeb.Data;
+using LeonsWeb.Quotes;
 using LeonsWeb.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.IISIntegration;
@@ -31,6 +32,8 @@ var mapperConfig =new MapperConfiguration(m =>
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddTransient<IServiceService, ServiceService>();
+builder.Services.AddTransient<IQuoteService, QuoteService>();
+builder.Services.AddTransient<IPromoService, PromoService>();
 builder.Services.AddMvc();
 
 builder.Services.AddCors(options =>

@@ -1,4 +1,4 @@
-﻿using LeonsWeb.Models.QuoteViewModel;
+﻿
 using LeonsWeb.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using LeonsWeb.Data;
 using LeonsWeb.Models;
-using LeonsWeb.Models.QuoteViewModel;
 using LeonsWeb.Models.ViewModel;
 using LeonsWeb.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -137,9 +136,14 @@ namespace LeonsWeb.Quotes
         }
         public SelectList GetSelectList(int id ){
 
-            
+            if(id >0){
             SelectList selectList = new SelectList(_context.Queues, "Id", "Name", id);
             return selectList;
+            }else{
+            SelectList selectList = new SelectList(_context.Queues, "Id", "Name");
+            return selectList;       
+            }
+         
         }
     }
 

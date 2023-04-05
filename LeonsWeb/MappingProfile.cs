@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using LeonsWeb.Models;
-using LeonsWeb.Models.QuoteViewModel;
 using LeonsWeb.Models.ViewModel;
 
 namespace LeonsWeb
