@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using LeonsWeb.Data;
 using LeonsWeb.Models;
 using Microsoft.AspNetCore.Authorization;
+using LeonsWeb.Services;
+using LeonsWeb.Models.QuoteViewModel;
 
 namespace LeonsWeb.Controllers
 {
@@ -15,45 +17,39 @@ namespace LeonsWeb.Controllers
     [Route("[controller]/[action]")]
     public class QuoteController : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public QuoteController(ApplicationDbContext context)
+        private readonly IQuoteService _quoteservice;
+        private readonly IServiceService _serviceservice;
+        private readonly IPromoService _promoservice;
+        public QuoteController( IQuoteService quoteService , IServiceService serviceService
+        , IPromoService promoService)
         {
-            _context = context;
+            _quoteservice = quoteService;
+            _serviceservice = serviceService;
+            _promoservice = promoService;
         }
 
         // GET: Quote
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Queues.Include(q => q.Promo).Include(q => q.Service);
-            return View(await applicationDbContext.ToListAsync());
+            List<QuoteViewModel> quotes = new List<QuoteViewModel>();
+            quotes = await _quoteservice.GetAllQuotes();
+            return View(quotes);
         }
 
         // GET: Quote/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Queues == null)
-            {
+            if((await _quoteservice.GetQuote(id)) == null){
                 return NotFound();
             }
-
-            var quote = await _context.Queues
-                .Include(q => q.Promo)
-                .Include(q => q.Service)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (quote == null)
-            {
-                return NotFound();
-            }
-
-            return View(quote);
+            return View((await _quoteservice.GetQuote(id)));
         }
 
         // GET: Quote/Create
         public IActionResult Create()
         {
-            ViewData["PromoId"] = new SelectList(_context.Promos, "Id", "Id");
-            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Id");
+           ViewData =["PromoId"] = _promoservice.GetSelectList(0);
+           ViewData =["ServiceId"] = _serviceservice.GetSelectList(0);
             return View();
         }
 
@@ -62,33 +58,28 @@ namespace LeonsWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NameQuote,AmoutToDiscountQuote,AmountTaxQuote,FinalPrice,IsTaked,PercentToDiscount,ServiceTypeToShow,Comment,ServiceId,PromoId")] Quote quote)
+        public async Task<IActionResult> Create([Bind("Id,NameQuote,AmoutToDiscountQuote,AmountTaxQuote,FinalPrice,IsTaked,PercentToDiscount,ServiceTypeToShow,Comment,ServiceId,PromoId")] QuoteViewModel quoteViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(quote);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if( await _quoteservice.CrateQuote(quoteViewModel)){
+                    return RedirectToAction(nameof(Index));
+                }
+                return Problem("Not Created");
             }
-            ViewData["PromoId"] = new SelectList(_context.Promos, "Id", "Id", quote.PromoId);
-            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Id", quote.ServiceId);
-            return View(quote);
+          return View(quoteViewModel);
         }
 
         // GET: Quote/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Queues == null)
-            {
-                return NotFound();
-            }
-
-            var quote = await _context.Queues.FindAsync(id);
+         
+            var quote = await _quoteservice.GetQuote(id);
             if (quote == null)
             {
                 return NotFound();
             }
-            ViewData["PromoId"] = new SelectList(_context.Promos, "Id", "Id", quote.PromoId);
+            ViewData["PromoId"] = 
             ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Id", quote.ServiceId);
             return View(quote);
         }

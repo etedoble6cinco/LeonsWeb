@@ -41,13 +41,9 @@ namespace LeonsWeb.Controllers
         // GET: Service/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            
-
-            if((await _serviceService.GetService(id)) == null)
-            {
+            if((await _serviceService.GetService(id)) == null){
                 return NotFound();
             }
-
             return View(await _serviceService.GetService(id));
         }
         // GET: Service/Create
@@ -69,7 +65,7 @@ namespace LeonsWeb.Controllers
                   if(await _serviceService.CreateService(service)){
                          return RedirectToAction(nameof(Index));
                   }
-               return Problem("not created");
+               return Problem("Not Created");
             }
             return View(service);
         }

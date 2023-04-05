@@ -2,6 +2,7 @@
 using LeonsWeb.Data;
 using LeonsWeb.Models;
 using LeonsWeb.Models.ViewModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -39,12 +40,15 @@ namespace LeonsWeb.Services
         {
             try
             {    
-                if(id is not null && ServiceExists(id)){}
+                if(id is not null && ServiceExists(id))
+                {
                 var service = await _context.Services.FindAsync(id);
                 _context.Remove(service);
                 await _context.SaveChangesAsync();
                 return true;
-            }
+                }
+                return false;
+            }    
             catch (SqlException e)
             {
                 Console.WriteLine(e.ToString());
@@ -118,6 +122,12 @@ namespace LeonsWeb.Services
           
         }
 
+        public SelectList GetSelectList(int id){
+
+
+            SelectList selectList = new SelectList(_context.Services, "Id", "Name", id);
+            return selectList;
+        }
 
     }
 }

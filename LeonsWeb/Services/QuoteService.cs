@@ -4,6 +4,8 @@ using LeonsWeb.Models;
 using LeonsWeb.Models.QuoteViewModel;
 using LeonsWeb.Models.ViewModel;
 using LeonsWeb.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -30,7 +32,7 @@ namespace LeonsWeb.Quotes
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
                 Console.WriteLine(ex.ToString());
                 throw;
@@ -44,15 +46,19 @@ namespace LeonsWeb.Quotes
             try
             {
                 
-                var Quote = await _context.Queues.FindAsync(id);
-                _context.Remove(Quote);
-                await _context.SaveChangesAsync();
-                return true;
+                if(id is not null && QuouteExists(id)){
+                    var service = await _context.Queues.FindAsync(id);
+                    _context.Remove(service);
+                    await _context.SaveChangesAsync();
+                    return true ;
+                }
+                
+                return false;
             }
-            catch (Exception e)
+            catch (SqlException e)
             {
                 Console.WriteLine(e.ToString());
-                throw;
+                return false;
             }
 
         }
@@ -62,12 +68,13 @@ namespace LeonsWeb.Quotes
         {
             try
             {
-                var quote = await _context.Queues.FindAsync(quoteViewModel.Id);
-             
+
+                var quote= _mapper.Map<QuoteViewModel,Quote>(quoteViewModel);
                 _context.Update(quote);
                 await _context.SaveChangesAsync();
                 return true;
             }
+              
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
@@ -79,38 +86,61 @@ namespace LeonsWeb.Quotes
 
         public async Task<QuoteViewModel> GetQuote(int? id)
         {
+            QuoteViewModel quoteEmpty = new QuoteViewModel();
             try
             {
-                if (await _context.Queues.FirstOrDefaultAsync(x => x.Id == id) is not null)
-                {
-                    var quote = await _context.Queues.FirstOrDefaultAsync(x => x.Id == id);
-
-                    QuoteViewModel quoteViewModel = new QuoteViewModel();
+               if(QuouteExists(id)){
+                    var quote = await _context.Queues.FindAsync(id);
+                    var quoteVM = _mapper.Map<Quote,QuoteViewModel>(quote);
+                    return quoteVM;
+               }
                
-                    return quoteViewModel;
-
-                }
-                else
-                {
-                    return new QuoteViewModel();
-                }
+               return quoteEmpty;
 
 
             }
             catch (Exception e)
             {
-                throw;
+                Console.WriteLine(e.Message.ToString());
+            return quoteEmpty;
             }
+
         }
 
-        Task<List<ServiceViewModel>> IQuoteService.GetAllQuotes()
+        public async Task<List<QuoteViewModel>> GetAllQuotes()
         {
-            throw new NotImplementedException();
+            try{
+
+                List<Quote> quotes = new List<Quote>();
+                quotes = await _context.Queues.ToListAsync();
+                var quotesVM = _mapper.Map<List<Quote>, List<QuoteViewModel>>(quotes);
+                return quotesVM;
+
+            }catch(SqlException ex) {
+                
+                Console.WriteLine(ex.Message.ToString());
+                List<QuoteViewModel> quotes =new List<QuoteViewModel>();
+                return quotes;
+            }
+      
         }
 
-        Task<ServiceViewModel> IQuoteService.GetQuote(int? id)
+
+           private bool QuouteExists(int? id)
         {
-            throw new NotImplementedException();
+            if(id is not null){
+                    return (_context.Queues?.Any(e => e.Id == id)).GetValueOrDefault();
+            }else{
+                return false;
+            }
+          
+        }
+        public SelectList GetSelectList(int id ){
+
+            
+            SelectList selectList = new SelectList(_context.Queues, "Id", "Name", id);
+            return selectList;
         }
     }
+
 }
