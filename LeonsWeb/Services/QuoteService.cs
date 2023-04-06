@@ -145,6 +145,10 @@ namespace LeonsWeb.Quotes
             }
          
         }
+          public List<Quote> GetList()
+        {
+            return _context.Queues.ToList();
+        }
     }
 
 }

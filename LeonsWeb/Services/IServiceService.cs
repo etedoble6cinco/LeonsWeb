@@ -1,4 +1,5 @@
-﻿using LeonsWeb.Models.ViewModel;
+﻿using LeonsWeb.Models;
+using LeonsWeb.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace LeonsWeb.Services
@@ -12,7 +13,7 @@ namespace LeonsWeb.Services
         Task<bool> EditService(ServiceViewModel serviceViewModel);  
         Task<bool> DeleteService(int? id);   
 
-        SelectList GetSelectList(int id);
+        List<Service> GetList();
         
     
     }

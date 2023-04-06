@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using LeonsWeb.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using LeonsWeb.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace LeonsWeb.Controllers
 {
@@ -41,8 +42,9 @@ namespace LeonsWeb.Controllers
         // GET: Quote/Create
         public IActionResult Create()
         {
-           ViewData["PromoId"] = _promoservice.GetSelectList(0);
-           ViewData["ServiceId"] = _serviceservice.GetSelectList(0);
+           ViewData["Service"] = new SelectList(_serviceservice.GetList(), "Id", "ServiceName");
+           ViewData["Promo"] = new SelectList(_promoservice.GetList(), "Id", "Name");
+           
             return View();
         }
 
@@ -72,8 +74,8 @@ namespace LeonsWeb.Controllers
             {
                 return NotFound();
             }
-            ViewData["PromoId"] =   _promoservice.GetSelectList(quote.PromoId);
-            ViewData["ServiceId"] =  _serviceservice.GetSelectList(quote.ServiceId);
+            ViewData["PromoId"] =  new  SelectList(_promoservice.GetList(), "Id", "Name",quote.PromoId);
+            ViewData["ServiceId"] = new  SelectList(_serviceservice.GetList(), "Id", "ServiceName",quote.ServiceId);
             return View(quote);
         }
 

@@ -1,4 +1,5 @@
-﻿using LeonsWeb.Models.ViewModel;
+﻿using LeonsWeb.Models;
+using LeonsWeb.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace LeonsWeb.Services
@@ -11,7 +12,6 @@ namespace LeonsWeb.Services
 
         Task<bool> EditPromo(PromoViewModel PromoViewModel);
         Task<bool> DeletePromo(int? id);
-
-        SelectList GetSelectList(int id);
+        List<Promo> GetList();
     }
 }

@@ -29,11 +29,9 @@ namespace LeonsWeb.Models.ViewModel
         public int ServiceId { get; set; }
         [Display(Name ="Service linked to the quote (not to show)")]
         public string ServiceName { get; set; }
-        public Service services { get; set; }  
         public int PromoId { get; set; }
         [Display(Name ="Promotion campaing name for the quote")]
         public string PromoName { get; set; }
-        public Promo promo { get; set; }    
 
 
      

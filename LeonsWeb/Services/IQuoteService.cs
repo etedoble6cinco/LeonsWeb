@@ -1,4 +1,5 @@
 ﻿
+using LeonsWeb.Models;
 using LeonsWeb.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -13,7 +14,7 @@ namespace LeonsWeb.Services
         Task<bool> EditQuote(QuoteViewModel quoteViewModel);
         Task<bool> DeleteQuote(int? id);
 
-        SelectList GetSelectList(int id);
+        List<Quote> GetList();
 
     }
 }
